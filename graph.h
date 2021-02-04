@@ -1,4 +1,4 @@
-#define INIT_SIZE = 1000
+#define INIT_SIZE = 256
 
 //TODO: reimpliment everythign with linked lists instead of arrays
 
@@ -8,8 +8,10 @@ typedef struct Graphs {
    int order;
    int edgeSum;
    int simple;
+   int size;
+   int totalSize;
+   Node *nodeArray[INIT_SIZE];
    void *adjacencyMatrix[INIT_SIZE][INIT_SIZE];
-   Node *nodeMatrix[INIT_SIZE];
 } Graph;
 
 typedef struct GraphNode {
@@ -39,4 +41,7 @@ Graph *initializeRandGraph(int directed, int n, int m);
 
 //destroy graph function
 
-//generate adjacencyMatrix from linked lists
+// resize the Graph
+Graph *resizeGraph(Graph *graph);
+
+int findSize(Graph *graph);

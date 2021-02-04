@@ -6,40 +6,34 @@
 
 Graph *initializeGraph(int directed, int simple) {
     Graph *graph;
-    if (!(graph = malloc(sizeof(Graph)))) {
+    if (!(graph = calloc(sizeof(Graph)))) {
        // TODO: handle error
     } 
     graph->directed = directed;
-    graph->order = 0;
-    graph->edgeSum = 0;
     graph->simple = simple;
-    for (int i = 0; i < INIT_SIZE; i++) {
-        graph->nodeMatrix[i] = 0;
-        for (int j = 0; j < INIT_SIZE; j++) {
-            graph->adjacencyMatrix[i][j] = 0;
-        }
-    }
+    graph->size = INIT_SIZE;
+    graph->totalSize = sizeof(Graph);
 }
 
 Node *addNode(Graph *graph, void *val) {
     int i = 0;
-    while (graph->nodeMatrix[i]) {
+    while (graph->nodeArray[i]) {
         i++;
     }
 
     Node *node;
-    if (!( node = malloc(sizeof(Graph)))) {
+    if (!( node = calloc(sizeof(Node)))) {
         // TODO: handle error
     }
     node->label = i;
     node->val = val;
-    graph->nodeMatrix[i] = node;
+    graph->nodeArray[i] = node;
     (graph->order)++;
     return node;
 }
 
 int addEdge(Graph *graph, Node *node1, Node *node2, void *decoration) {
-    if (!(graph->nodeMatrix[node1->label]) ||  !(graph->nodeMatrix[node2->label])) {
+    if (!(graph->nodeArray[node1->label]) ||  !(graph->nodeArray[node2->label])) {
         return 0;
     }
 
@@ -69,7 +63,7 @@ void *removeNode(Graph *graph, Node *node) {
         graph->adjacencyMatrix[node->label][i] = 0; 
     }
 
-    graph->nodeMatrix[node->label] = 0;
+    graph->nodeArray[node->label] = 0;
     void *val = node->val;
     free(node);
     return val;
@@ -90,4 +84,36 @@ Graph *initializeRandGraph(int directed, int n, int m) {
         node1 = graph->adjacencyMatrix[rand() / (RAND_MAX / m + 1)];
         node2 = graph->adjacencyMatrix[rand() / (RAND_MAX / m + 1)];
     }
+}
+
+Graph *resizeGraph(Graph *graph) {
+    int newSize = graph->totalSize + (graph->size)*sizeof(Node *) + 2*((graph->size)*(graph->size) - (graph->size));
+    Graph *newGraph;
+    if (!(newGraph = calloc(newSize))) {
+        //TODO: Handle Error
+    }
+
+    newGraph->order = graph->order;
+    newGraph->directed = graph->directed;
+    newGraph->simple = graph->simple;
+    newGraph->edgeSum = graph->edgeSum
+
+    newGraph->totalSize = newSize;
+    newGraph->size = (graph->size)*2
+
+    for (int i = 0; i < graph->size; i++) {
+        newGraph->nodeArray[i] = graph->nodeArray[i];
+    }
+
+    newGraph->adjacencyMatrix += graph->order*sizeof(Node *);
+    for (int i = 0; i < graph->size; i++) {
+        for (int j = 0; j < graph->size; j++) {
+            newGraph->adjacencyMatrix[i][j] = graph->adjacencyMatrix[i][j];
+        }
+    }
+
+    free(graph);
+    
+    return newGraph;
+
 }
