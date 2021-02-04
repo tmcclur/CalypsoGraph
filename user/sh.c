@@ -69,6 +69,9 @@ int builtin(char *argv[BUFS / 2]) {
 }
 
 int main() {
+
+    srand(time(NULL));
+
     size_t count = BUFS;
     ssize_t r;
     char buffer[BUFS];

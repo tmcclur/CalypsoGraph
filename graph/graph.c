@@ -69,8 +69,6 @@ void *removeNode(Graph *graph, Node *node) {
     return val;
 }
 
-srand(time(NULL));
-
 Graph *initializeRandGraph(int directed, int n, int m) {
     Graph *graph = initializeGraph(int directed);
 
@@ -113,7 +111,5 @@ Graph *resizeGraph(Graph *graph) {
     }
 
     free(graph);
-    
     return newGraph;
-
 }
