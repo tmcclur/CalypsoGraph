@@ -11,3 +11,4 @@ TODO:
 - [ ] implement builtin functions in sh.c
 - [ ] design scripting lang for graphs
 - [ ] figure out how to visualize graphs and edit them visually
+- [ ] command history ^/ gdb style enter, can be output to a file
