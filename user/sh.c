@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "graph.h"
-#include "linear.h"
+#include "../graph/graph.h"
+#include "../basic/linear.h"
 
 #define BUFS = 1024
 

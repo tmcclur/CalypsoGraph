@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "graph.h"
-#include "linear.h"
+#include "../basic/linear.h"
 
 Graph *initializeGraph(int directed, int simple) {
     Graph *graph;
