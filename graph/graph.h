@@ -1,8 +1,13 @@
-#define INIT_SIZE = 256
+#define INIT_SIZE  256
 
 //TODO: reimpliment everythign with linked lists instead of arrays
 
 // Graph Struct, adjacency matrix, node matrix, edge val type, directed 
+typedef struct GraphNode {
+    int label;
+    void *val;
+} Node;
+
 typedef struct Graphs {
    int directed;
    int order;
@@ -13,11 +18,6 @@ typedef struct Graphs {
    Node *nodeArray[INIT_SIZE];
    void *adjacencyMatrix[INIT_SIZE][INIT_SIZE];
 } Graph;
-
-typedef struct GraphNode {
-    int label;
-    void *val;
-} Node;
 
 // initialize graph
 Graph *initializeGraph(int directed, int simple);

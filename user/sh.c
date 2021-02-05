@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <unistd.h>
 #include "../graph/graph.h"
 #include "../basic/linear.h"
 
-#define BUFS = 1024
+#define BUFS  1024
 
 int parse(char buffer[BUFS], char *tokens[BUFS / 2], char *argv[BUFS / 2]) {
     /* tokenize the buffer */
@@ -90,13 +94,13 @@ int main() {
             }
             if (argv[0]) {
                 int b;
-                if (b = builtin(argv)) {
+                if ((b = builtin(argv))) {
                     if (b < 0) {
                         printf("Command not found. Use help to see list of commands.\n");
                     }
                     continue;
                 } else {
-                    break
+                    break;
                 }
             }
         } else if (r < 0) {

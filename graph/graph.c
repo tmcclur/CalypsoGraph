@@ -16,18 +16,18 @@ Graph *initializeGraph(int directed, int simple) {
 }
 
 Node *addNode(Graph *graph, void *val) {
-    int i = 0;
-    while (graph->nodeArray[i]) {
-        i++;
-    }
 
+    if (graph->order == graph->size) {
+        graph = resizeGraph(graph);
+    }
+    
     Node *node;
     if (!( node = calloc(sizeof(Node)))) {
         // TODO: handle error
     }
-    node->label = i;
+    node->label = graph->order;
     node->val = val;
-    graph->nodeArray[i] = node;
+    graph->nodeArray[graph->order] = node;
     (graph->order)++;
     return node;
 }
