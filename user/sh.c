@@ -5,10 +5,7 @@
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <unistd.h>
-#include "../graph/graph.h"
-#include "../basic/linear.h"
-
-#define BUFS  1024
+#include "builtin.h"
 
 int parse(char buffer[BUFS], char *tokens[BUFS / 2], char *argv[BUFS / 2]) {
     /* tokenize the buffer */
@@ -21,11 +18,6 @@ int parse(char buffer[BUFS], char *tokens[BUFS / 2], char *argv[BUFS / 2]) {
         buff = NULL;
         i++;
     }
-
-    int input_count = 0;
-    int output_count = 0;
-    int args[BUFS / 2];
-    int args_count = 0;
 
     /* separate binary from path name */
     argv[i] = NULL;
@@ -48,33 +40,23 @@ void prompt() {
     }
 }
 
-/* list of commands to be implemented: 
-    write DONE in front of implemented commands
-
-    new(n) name, additional args: creates a graph that can be referenced later by name
-    add(a) graph, additional args: adds either a node or edge
-    delete(d) name of object: removes object (graph, node, or edge)
-    query(q) query objects by params: searches for and returns objects of the correct type 
-        match the params
-    visualize(v) graph: launches visual graph editor in a new thread
-    run(r) script.txt: takes in script of commands and runs them
-*/
-
 /*
     This function checks for and calls builtin functions
 */
 int builtin(char *argv[BUFS / 2]) {
-    /* if (!(strcmp(argv[0], "n"))  ||  !(strcmp(argv[0], "new"))) {
+    if (!(strcmp(argv[0], "n"))  ||  !(strcmp(argv[0], "new"))) {
         return new(argv);
-    } else */ if (!(strcmp(argv[0], "exit")) || !(strcmp(argv[0], "x"))) {
+    } else if (!(strcmp(argv[0], "exit")) || !(strcmp(argv[0], "x"))) {
         return 0;
+    } else if (!(strcmp(argv[0], "help")) || !(strcmp(argv[0], "h"))) {
+        return help();
     }
     return -1;
 }
 
 int main() {
 
-    srand(time(NULL));
+    srand( (unsigned int) (time(NULL)));
 
     size_t count = BUFS;
     ssize_t r;

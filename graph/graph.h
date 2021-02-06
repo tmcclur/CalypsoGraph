@@ -14,9 +14,10 @@ typedef struct Graphs {
    int edgeSum;
    int simple;
    int size;
-   int totalSize;
+   unsigned long totalSize;
+   void **adjacencyMatrix;
    Node *nodeArray[INIT_SIZE];
-   void *adjacencyMatrix[INIT_SIZE][INIT_SIZE];
+   void *adjMat[INIT_SIZE*INIT_SIZE];
 } Graph;
 
 // initialize graph
@@ -35,7 +36,7 @@ void *removeEdge(Graph *graph, Node *node1, Node *node2);
 void *removeNode(Graph *graph, Node *node);
 
 // initialize random graph with n nodes and m edges
-Graph *initializeRandGraph(int directed, int n, int m);
+Graph *initializeRandGraph(int directed, int simple, int n, int m);
 
 //consider search options: hash function by vals
 
@@ -45,3 +46,4 @@ Graph *initializeRandGraph(int directed, int n, int m);
 Graph *resizeGraph(Graph *graph);
 
 int findSize(Graph *graph);
+

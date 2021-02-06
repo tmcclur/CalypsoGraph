@@ -1,0 +1,17 @@
+CC = gcc
+CFLAGS = -g3 -Wall -Wextra -Wconversion -Wcast-qual -Wcast-align -g
+CFLAGS += -Winline -Wfloat-equal -Wnested-externs
+CFLAGS += -pedantic -std=gnu99 -Werror
+EXECS = calypso
+DEPENDENCIES = user/sh.c graph/graph.c user/builtin.c
+
+.PHONY: all clean
+
+PROMPT = -DPROMPT
+
+all: $(EXECS)
+
+calypso: $(DEPENDENCIES)
+	$(CC) $(CFLAGS) $^ -o $@ 
+clean:
+	rm -f $(EXECS)
