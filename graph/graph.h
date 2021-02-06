@@ -24,7 +24,7 @@ typedef struct Graphs {
 Graph *initializeGraph(int directed, int simple);
 
 // add node to graph
-Node *addNode(Graph *graph,  void *val);
+Node *addNode(Graph **graph,  void *val);
 
 // add edge from node1 to node2
 int addEdge(Graph *graph, Node *node1, Node *node2, void *decoration);

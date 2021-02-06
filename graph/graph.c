@@ -13,25 +13,25 @@ Graph *initializeGraph(int directed, int simple) {
     graph->simple = simple;
     graph->size = INIT_SIZE;
     graph->totalSize = sizeof(Graph);
-    graph->adjacencyMatrix = &(graph->adjMat[0]);
+    graph->adjacencyMatrix = (void **) (&(graph->nodeArray[0]) + graph->size);
 
     return graph;
 }
 
-Node *addNode(Graph *graph, void *val) {
+Node *addNode(Graph **graph, void *val) {
 
-    if ( graph->order == graph->size) {
-        graph = resizeGraph(graph);
+    if ( (*graph)->order == (*graph)->size) {
+        *graph = resizeGraph(*graph);
     }
     
     Node *node;
     if (!( node = calloc(sizeof(Node), 1))) {
         // TODO: handle error
     }
-    node->label = graph->order;
+    node->label = (*graph)->order;
     node->val = val;
-    graph->nodeArray[graph->order] = node;
-    (graph->order)++;
+    (*graph)->nodeArray[(*graph)->order] = node;
+    ((*graph)->order)++;
     return node;
 }
 
@@ -80,7 +80,7 @@ Graph *initializeRandGraph(int directed, int simple, int n, int m) {
     Graph *graph = initializeGraph(directed, simple);
 
     for (int i = 0; i < n; i++) {
-        addNode(graph, 0);
+        addNode(&graph, 0);
     }
 
     Node *node1;
@@ -97,7 +97,7 @@ Graph *initializeRandGraph(int directed, int simple, int n, int m) {
 }
 
 Graph *resizeGraph(Graph *graph) {
-    size_t diff = (((unsigned long) graph->size)*sizeof(Node *) + 2*(( (unsigned long) graph->size)*( (unsigned long) graph->size) - ( (unsigned long) graph->size)));
+    size_t diff =  4*(( (unsigned long) graph->size)*( (unsigned long) graph->size))*sizeof(void *);
     unsigned long newSize = graph->totalSize + ((unsigned long) diff);
     Graph *newGraph;
     if (!(newGraph = calloc(newSize, 1))) {
@@ -116,7 +116,7 @@ Graph *resizeGraph(Graph *graph) {
         newGraph->nodeArray[i] = graph->nodeArray[i];
     }
 
-    newGraph->adjacencyMatrix += ( (unsigned long) graph->size)*sizeof(Node *);
+    newGraph->adjacencyMatrix = (void **) (&(newGraph->nodeArray[0]) + newGraph->size);
     for (int i = 0; i < graph->order; i++) {
         for (int j = 0; j < graph->order; j++) {
             newGraph->adjacencyMatrix[i*newGraph->size + j] = graph->adjacencyMatrix[i*graph->size + j];
