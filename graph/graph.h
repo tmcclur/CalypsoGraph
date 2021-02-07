@@ -4,17 +4,17 @@
 
 // Graph Struct, adjacency matrix, node matrix, edge val type, directed 
 typedef struct GraphNode {
-    int label;
+    size_t label;
     void *val;
 } Node;
 
 typedef struct Graphs {
    int directed;
-   int order;
-   int edgeSum;
+   size_t order;
+   size_t edgeSum;
    int simple;
-   int size;
-   unsigned long totalSize;
+   size_t size;
+   size_t totalSize;
    void **adjacencyMatrix;
    Node *nodeArray[INIT_SIZE];
    void *adjMat[INIT_SIZE*INIT_SIZE];

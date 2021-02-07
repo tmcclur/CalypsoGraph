@@ -40,14 +40,14 @@ int addEdge(Graph *graph, Node *node1, Node *node2, void *decoration) {
         return 0;
     }
 
-    if (graph->adjacencyMatrix[node1->label*graph->size + node2->label]) {
+    if (graph->adjacencyMatrix[node1->label*(graph->size) + node2->label]) {
         return 0;
     }
 
     if (!(graph->simple) || (node1 != node2)) {
-        graph->adjacencyMatrix[node1->label*graph->size + node2->label] = decoration;
+        graph->adjacencyMatrix[node1->label*(graph->size) + node2->label] = decoration;
         if (!graph->directed) {
-            graph->adjacencyMatrix[node2->label*graph->size + node1->label] = decoration;
+            graph->adjacencyMatrix[node2->label*(graph->size) + node1->label] = decoration;
         }
     }
 
@@ -57,16 +57,16 @@ int addEdge(Graph *graph, Node *node1, Node *node2, void *decoration) {
 }
 
 void *removeEdge(Graph *graph, Node *node1, Node *node2) {
-    void *decoration = graph->adjacencyMatrix[node1->label*graph->size + node2->label];
-    graph->adjacencyMatrix[node1->label*graph->size + node2->label] = 0;
+    void *decoration = graph->adjacencyMatrix[node1->label*( graph->size) + node2->label];
+    graph->adjacencyMatrix[node1->label*(graph->size) + node2->label] = 0;
     (graph->edgeSum)--;
     return decoration;
 }
 
 void *removeNode(Graph *graph, Node *node) {
-    for (int i = 0; i < INIT_SIZE; i++) {
-        graph->adjacencyMatrix[i*graph->size + node->label] = 0; 
-        graph->adjacencyMatrix[node->label*graph->size + i] = 0; 
+    for (size_t i = 0; i < INIT_SIZE; i++) {
+        graph->adjacencyMatrix[i*( graph->size) + node->label] = 0; 
+        graph->adjacencyMatrix[node->label*(graph->size) + i] = 0; 
     }
 
     graph->nodeArray[node->label] = 0;
@@ -87,7 +87,7 @@ Graph *initializeRandGraph(int directed, int simple, int n, int m) {
     Node *node2;
 
     // this will be very inefficient when m is close to n^2 
-    while (graph->edgeSum < m) {
+    while (((int) graph->edgeSum) < m) {
         node1 = graph->nodeArray[rand() / (RAND_MAX / n + 1)];
         node2 = graph->nodeArray[rand() / (RAND_MAX / n + 1)];
         addEdge(graph, node1, node2, 0);
@@ -112,14 +112,14 @@ Graph *resizeGraph(Graph *graph) {
     newGraph->totalSize = newSize;
     newGraph->size = (graph->size)*2;
 
-    for (int i = 0; i < graph->order; i++) {
+    for (int i = 0; i < ((int) graph->order); i++) {
         newGraph->nodeArray[i] = graph->nodeArray[i];
     }
 
     newGraph->adjacencyMatrix = (void **) (&(newGraph->nodeArray[0]) + newGraph->size);
-    for (int i = 0; i < graph->order; i++) {
-        for (int j = 0; j < graph->order; j++) {
-            newGraph->adjacencyMatrix[i*newGraph->size + j] = graph->adjacencyMatrix[i*graph->size + j];
+    for (int i = 0; i < ((int) graph->order); i++) {
+        for (int j = 0; j < ((int) graph->order); j++) {
+            newGraph->adjacencyMatrix[((size_t) i)*(newGraph->size) + ((size_t) j)] = graph->adjacencyMatrix[((size_t) i)*(graph->size) + ((size_t) j)];
         }
     }
 

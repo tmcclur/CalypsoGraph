@@ -14,6 +14,7 @@ int new(char *argv[BUFS / 2]) {
         fprintf(stderr, "Too few arguments for new command.\n");
         return -1;
     } else {
+        // check that name is not already taken
         if (argv[2] != 0) {
             if (!(strcmp(argv[2], "d")) || !(strcmp(argv[2], "directed"))) {
                 if (argv[3] == 0) {
@@ -32,7 +33,6 @@ int new(char *argv[BUFS / 2]) {
                     } else if (!(strcmp(argv[6], "s")) || !(strcmp(argv[6], "simple"))) {
                         simple = 1;
                     } else {
-                        printf("here\n");
                         fprintf(stderr, "Parameters not valid for new command.\n");
                         return -1;
                     }
@@ -40,7 +40,6 @@ int new(char *argv[BUFS / 2]) {
                     if (!(strcmp(argv[5], "d")) || !(strcmp(argv[5], "directed"))) {
                         directed = 1;
                     } else if (!(!(strcmp(argv[5], "u")) || !(strcmp(argv[5], "undirected")))) {
-                        printf("there\n");
                         fprintf(stderr, "Parameters not valid for new command.\n");
                         return -1;
                     } else {
@@ -68,7 +67,6 @@ int new(char *argv[BUFS / 2]) {
     if (!graph) {
         graph = initializeGraph(directed, simple);
     }
-    printf("%d\n", graph->directed);
         // store graph by name in bst 
     return 1;
 }
