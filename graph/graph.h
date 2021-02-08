@@ -1,4 +1,5 @@
 #define INIT_SIZE  256
+#include <stddef.h>
 
 //TODO: reimpliment everythign with linked lists instead of arrays
 
@@ -19,6 +20,22 @@ typedef struct Graphs {
    Node *nodeArray[INIT_SIZE];
    void *adjMat[INIT_SIZE*INIT_SIZE];
 } Graph;
+
+typedef struct LinkedEdgeListNode {
+    struct LinkedEdgeListNode *next;
+    size_t i;
+    size_t j;
+} Edge;
+
+typedef struct LinkedEdgeList {
+    Edge *head;
+    size_t size;
+} List;
+
+typedef struct IndexArray {
+    size_t i;
+    size_t j;
+} Index;
 
 // initialize graph
 Graph *initializeGraph(int directed, int simple);
@@ -46,4 +63,13 @@ Graph *initializeRandGraph(int directed, int simple, int n, int m);
 Graph *resizeGraph(Graph *graph);
 
 int findSize(Graph *graph);
+
+size_t chooseTwo(int n);
+
+List *generatePossibleEdgesList(Graph *graph);
+
+Index popRandomEdge(List *head);
+
+int destroyList(List *list);
+
 
