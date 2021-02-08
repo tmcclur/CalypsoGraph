@@ -5,7 +5,25 @@
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <unistd.h>
+#include <ncurses.h>
 #include "builtin.h"
+
+#define updateBorder() if (x == width - 1) {   \
+                        x=1;                   \
+                        y++;                   \
+                        }                      \
+                        if (y == height - 1) { \
+                            y--;               \
+                            scroll(win);       \
+                            wmove(win, y, x);  \
+                            wclrtoeol(win);    \
+                            box(win, 0, 0);    \
+                        }
+
+#define max(x,y) ((x) > (y) ? (x) : (y))
+#define min(x,y) ((x) < (y) ? (x) : (y))
+#define PROMPT "Type Command> " 
+
 
 int parse(char buffer[BUFS], char *tokens[BUFS / 2], char *argv[BUFS / 2]) {
     /* tokenize the buffer */
@@ -28,16 +46,14 @@ int parse(char buffer[BUFS], char *tokens[BUFS / 2], char *argv[BUFS / 2]) {
     return 0;
 }
 
-void prompt() {
+void prompt(WINDOW **win, int *y, int *x) {
     /* prompt */
-    if (printf("Type Command> ") < 0) {
-        fprintf(stderr, "Library function failed\n");
+    if (mvwprintw(*win, *y, *x, PROMPT) < 0) {
+        fprintf(stderr, "\nLibrary function failed\n");
         exit(1);
     }
-    if (fflush(stdout) < 0) {
-        fprintf(stderr, "Library function failed\n");
-        exit(1);
-    }
+    *x = strlen(PROMPT) + 1;
+    wrefresh(*win);
 }
 
 /*
@@ -58,40 +74,92 @@ int main() {
 
     srand( (unsigned int) (time(NULL)));
 
-    size_t count = BUFS;
-    ssize_t r;
     char buffer[BUFS];
     char *tokens[BUFS / 2];
     char *argv[BUFS / 2];
 
+    // {{{ ncurses init
+    initscr();
+    cbreak();
+    noecho();
+    // preparing window
+    int height, width, x, y;
+    getmaxyx(stdscr, height, width);
+    height /= 6;
+    width = width*3/4;
+    WINDOW *win = newwin(height, width, height*5, width/6);
+    scrollok(win, TRUE); // allow scrolling in window
+    keypad(win, TRUE); // allow arrow keys
+    refresh();
+    // making box
+    box(win, 0, 0);
+    mvwprintw(win, 0, 4, "Calypso"); // title the window
+    x = y = 1;
+    wmove(win, y, x); // move to repl position
+    wrefresh(win);
+    // }}}
+
     /* REPL */
     while (1) {
-        prompt();
-        r = read(0, &buffer, count);
-        if (r > 0) {
-            /* parse and eval input */
-            buffer[r - 1] = '\0';
-            if (parse(buffer, tokens, argv)) {
-                continue;
-            }
-            if (argv[0]) {
-                int b;
-                if ((b = builtin(argv))) {
-                    if (b < 0) {
-                        printf("Command not found. Use help to see list of commands.\n");
-                    }
-                    continue;
-                } else {
+        updateBorder();
+        prompt(&win, &y, &x);
+        updateBorder();
+        int c = 0;
+        int strindex = 0;
+        // this loop fills into buffer
+        while (c != 10 && strindex < BUFS) {
+            switch(c = wgetch(win)) {
+                case KEY_UP: case KEY_DOWN:
                     break;
-                }
+                case KEY_LEFT:
+                    getyx(win, y, x);
+                    wmove(win, y, x-1);
+                    break;
+                case KEY_RIGHT:
+                    getyx(win, y, x);
+                    wmove(win, y, min(x+1, (int)strlen(PROMPT) + strindex));
+                    break;
+                case '\n':
+                    buffer[strindex] = (char)c;
+                    strindex++;
+                    break;
+                case 8: case 127: // backspace
+                    wdelch(win);
+                    x--;
+                    strindex--;
+                    break;
+                default:
+                    mvwaddch(win, y, x++, (chtype)c);
+                    updateBorder();
+                    buffer[strindex] = (char)c;
+                    strindex++;
+                    break;
             }
-        } else if (r < 0) {
-            /* handle error with read */
-            perror("read");
-            exit(1);
-        } else {
-            break;
+            wrefresh(win);
+        }
+        y++;
+        x = 1;
+        updateBorder();
+        /* parse and eval input */
+        buffer[strindex-1] = '\0';
+        if (parse(buffer, tokens, argv)) {
+            continue;
+        }
+        if (argv[0]) {
+            int b;
+            if ((b = builtin(argv))) {
+                if (b < 0) {
+                    mvwprintw(win, y++, x=1, "Command not found. Use help to see list of commands.");
+                    updateBorder();
+                    wrefresh(win);
+                }
+                continue;
+            } else {
+                break;
+            }
         }
     }
+    endwin(); // end of ncurses stuff
+
     return 0;
 }
