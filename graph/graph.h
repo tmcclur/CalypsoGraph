@@ -16,9 +16,9 @@ typedef struct Graphs {
    int simple;
    size_t size;
    size_t totalSize;
-   void **adjacencyMatrix;
+   double *adjacencyMatrix;
    Node *nodeArray[INIT_SIZE];
-   void *adjMat[INIT_SIZE*INIT_SIZE];
+   double adjMat[INIT_SIZE*INIT_SIZE];
 } Graph;
 
 // initialize graph
@@ -28,10 +28,10 @@ Graph *initializeGraph(int directed, int simple);
 Node *addNode(Graph **graph,  void *val);
 
 // add edge from node1 to node2
-int addEdge(Graph *graph, Node *node1, Node *node2, void *decoration);
+int addEdge(Graph *graph, Node *node1, Node *node2, double decoration);
 
 // remove edge that connects 1 to 2 and return decoration
-void *removeEdge(Graph *graph, Node *node1, Node *node2);
+double removeEdge(Graph *graph, Node *node1, Node *node2);
 
 // remove node and return it's val
 void *removeNode(Graph *graph, Node *node);
