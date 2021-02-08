@@ -12,60 +12,74 @@ size_t chooseTwo(int n) {
     return sum;
 }
 
+
 List *generatePossibleEdgesList(Graph *graph) {
     List *list;
     Edge *cur;
+    Edge *prev = 0;
     if (!(list = (calloc(sizeof(List), 1)))) {
         //TODO: handle error
-    }
-    if (!(cur = (calloc(sizeof(Edge), 1)))) {
-        //TODO: handle error
-    }
-    list->head = cur;
+    } 
     list->size = 0;
 
     for (size_t k = 0; k < graph->order; k++){
         for (size_t l=0; l < graph->order; l++){
-            if (graph->simple && k == l) {
+            if (graph->simple && (k == l)) {
                 continue;
             }
             if (!(graph->directed) && k > l) {
                 continue;
             } 
-            if (!(cur->next = (calloc(sizeof(Edge), 1)))) {
+            if (!(cur = (calloc(sizeof(Edge), 1)))) {
                 //TODO: handle error
             }
-            cur->next->i = k;
-            cur->next->j = l;
+            cur->i = k;
+            cur->j = l;
+            if (list->head){
+                prev->next = cur;
+            } else {
+                list->head = cur;
+            }
             (list->size)++;
+            prev = cur;
             cur = cur->next;
         }
     }
     return list;
 }
 
-Index popRandomEdge(List *list) {
-    size_t listIndex;
-    if (list->size){
-        listIndex = (size_t) rand() / (RAND_MAX / list->size + 1);
-    } else {
-        listIndex = 0;
-    }
+int popRandomEdges(Graph *graph, List *list, int m) {
     Edge *prev = 0;
+    Edge *next;
     Edge *cur = list->head;
-    for (size_t i = 0; i < listIndex; i++){
-        prev = cur;
-        cur = cur->next;
+    unsigned long long a = (unsigned long long) m * (unsigned long long) RAND_MAX / (unsigned long long) list->size;
+    int p = (int) a;
+    for (size_t i = 0; i < list->size; i++){
+        if (!m) {
+            break;
+        }
+        if (rand() < p){
+
+            addEdge(graph, graph->nodeArray[cur->i], graph->nodeArray[cur->j], 0);
+            
+            if(prev){
+                prev->next = cur->next;
+                next = cur->next;
+                free(cur);
+                cur = next;
+            } else {
+                list->head = list->head->next;
+                free(cur);
+                cur = list->head;
+            }
+            (list->size)--;
+            m--;
+        } else {
+            prev = cur;
+            cur = cur->next;
+        }
     }
-    if(prev){
-        prev->next = cur->next;
-    } else {
-        list->head = list->head->next;
-    }
-    (list->size)--;
-    Index index = {cur->i, cur->j};
-    free(cur);
-    return index;
+    return 1;
     
 }
 
@@ -77,7 +91,7 @@ int destroyList(List *list) {
         free(cur);
     }
     free(list);
-    return 0;
+    return 1;
 }
 
 

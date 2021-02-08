@@ -68,7 +68,7 @@ size_t chooseTwo(int n);
 
 List *generatePossibleEdgesList(Graph *graph);
 
-Index popRandomEdge(List *head);
+int popRandomEdges(Graph *graph, List *head, int m);
 
 int destroyList(List *list);
 
