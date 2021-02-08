@@ -58,6 +58,9 @@ int addEdge(Graph *graph, Node *node1, Node *node2, void *decoration) {
 void *removeEdge(Graph *graph, Node *node1, Node *node2) {
     void *decoration = graph->adjacencyMatrix[node1->label*( graph->size) + node2->label];
     graph->adjacencyMatrix[node1->label*(graph->size) + node2->label] = 0;
+    if (!graph->directed) {
+        graph->adjacencyMatrix[node2->label*(graph->size) + node1->label] = 0;
+    }
     (graph->edgeSum)--;
     return decoration;
 }
@@ -82,20 +85,40 @@ Graph *initializeRandGraph(int directed, int simple, int n, int m) {
         return 0;
     }
     Graph *graph = initializeGraph(directed, simple);
-
     for (int i = 0; i < n; i++) {
         addNode(&graph, 0);
     }
-    
-    //make edge list
-    List *list = generatePossibleEdgesList(graph);
 
-    while(graph->edgeSum < (size_t) m) {
-        //choose random edge 
-        popRandomEdges(graph, list, m - (int) graph->edgeSum);
+    Node *node1;
+    Node *node2;
+
+    //improved naive version
+    if ((double)m > ((double)n*n * 0.57)){
+        while(graph->edgeSum < (size_t) (n*n - m)) {
+            //choose random edge 
+            node1 = graph->nodeArray[rand() % n];
+            node2 = graph->nodeArray[rand() % n];
+            addEdge(graph, node1, node2, 0);
+        }
+
+        for (size_t i = 0; i < graph->order; i++) {
+            for (size_t j = 0; j < graph->order; j++) {
+                if (graph->adjacencyMatrix[i*graph->size + j]) {
+                    printf("%zu , %zu\n", i, j);
+                    removeEdge(graph, graph->nodeArray[i], graph->nodeArray[j]);
+                }
+            }
+        }
+    } else {
+        while(graph->edgeSum < (size_t) m) {
+            //choose random edge 
+            node1 = graph->nodeArray[rand() / (RAND_MAX / n + 1)];
+            node2 = graph->nodeArray[rand() / (RAND_MAX / n + 1)];
+            addEdge(graph, node1, node2, 0);
+        }
     }
 
-    destroyList(list);
+
     return graph;
 }
 

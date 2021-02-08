@@ -21,22 +21,6 @@ typedef struct Graphs {
    void *adjMat[INIT_SIZE*INIT_SIZE];
 } Graph;
 
-typedef struct LinkedEdgeListNode {
-    struct LinkedEdgeListNode *next;
-    size_t i;
-    size_t j;
-} Edge;
-
-typedef struct LinkedEdgeList {
-    Edge *head;
-    size_t size;
-} List;
-
-typedef struct IndexArray {
-    size_t i;
-    size_t j;
-} Index;
-
 // initialize graph
 Graph *initializeGraph(int directed, int simple);
 
@@ -62,14 +46,6 @@ Graph *initializeRandGraph(int directed, int simple, int n, int m);
 // resize the Graph
 Graph *resizeGraph(Graph *graph);
 
-int findSize(Graph *graph);
-
 size_t chooseTwo(int n);
-
-List *generatePossibleEdgesList(Graph *graph);
-
-int popRandomEdges(Graph *graph, List *head, int m);
-
-int destroyList(List *list);
 
 
