@@ -76,7 +76,7 @@ void *removeNode(Graph *graph, Node *node) {
 }
 
 Graph *initializeRandGraph(int directed, int simple, int n, int m) {
-    size_t maxPossible = (size_t) (directed*(n*n - simple*n)) + !directed*chooseTwo(n);
+    size_t maxPossible = (size_t) (directed*(n*n - simple*n)) + !directed*(chooseTwo(n) + (size_t) (!simple*n));
     if ((size_t) m > maxPossible) {
         fprintf(stderr, "Too many edges for graph of this size.\n");
         return 0;
@@ -86,20 +86,13 @@ Graph *initializeRandGraph(int directed, int simple, int n, int m) {
     for (int i = 0; i < n; i++) {
         addNode(&graph, 0);
     }
-
-    Node *node1;
-    Node *node2;
     
     //make edge list
     List *list = generatePossibleEdgesList(graph);
 
-    Index index;
-    for (int k = 0; k < m; k++) {
+    while(graph->edgeSum < (size_t) m) {
         //choose random edge 
-        index = popRandomEdge(list);
-        node1 = graph->nodeArray[index.i];
-        node2 = graph->nodeArray[index.j];
-        addEdge(graph, node1, node2, 0);
+        popRandomEdges(graph, list, m - (int) graph->edgeSum);
     }
 
     destroyList(list);
