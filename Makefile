@@ -4,7 +4,7 @@ CFLAGS += -Winline -Wfloat-equal -Wnested-externs -funroll-loops
 CFLAGS += -pedantic -std=gnu99 -Werror
 CFLAGS += -lncurses -pg
 EXECS = calypso
-DEPENDENCIES = user/sh.c graph/graph.c user/builtin.c
+DEPENDENCIES = user/sh.c graph/graph.c user/builtin.c basic/combinatorics.c
 
 .PHONY: all clean
 

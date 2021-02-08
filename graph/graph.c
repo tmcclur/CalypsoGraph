@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include "graph.h"
-#include "../basic/linear.h"
 
 Graph *initializeGraph(int directed, int simple) {
     Graph *graph;
@@ -12,6 +11,7 @@ Graph *initializeGraph(int directed, int simple) {
     graph->directed = directed;
     graph->simple = simple;
     graph->size = INIT_SIZE;
+    graph->edgeSum = 0;
     graph->totalSize = sizeof(Graph);
     graph->adjacencyMatrix = (void **) (&(graph->nodeArray[0]) + graph->size);
 
@@ -40,33 +40,32 @@ int addEdge(Graph *graph, Node *node1, Node *node2, void *decoration) {
         return 0;
     }
 
-    if (graph->adjacencyMatrix[node1->label*graph->size + node2->label]) {
+    if (graph->adjacencyMatrix[node1->label*(graph->size) + node2->label]) {
         return 0;
     }
 
     if (!(graph->simple) || (node1 != node2)) {
-        graph->adjacencyMatrix[node1->label*graph->size + node2->label] = decoration;
+        graph->adjacencyMatrix[node1->label*(graph->size) + node2->label] = decoration;
         if (!graph->directed) {
-            graph->adjacencyMatrix[node2->label*graph->size + node1->label] = decoration;
+            graph->adjacencyMatrix[node2->label*(graph->size) + node1->label] = decoration;
         }
+        graph->edgeSum++;
     }
-
-    graph->edgeSum++;
 
     return 1;
 }
 
 void *removeEdge(Graph *graph, Node *node1, Node *node2) {
-    void *decoration = graph->adjacencyMatrix[node1->label*graph->size + node2->label];
-    graph->adjacencyMatrix[node1->label*graph->size + node2->label] = 0;
+    void *decoration = graph->adjacencyMatrix[node1->label*( graph->size) + node2->label];
+    graph->adjacencyMatrix[node1->label*(graph->size) + node2->label] = 0;
     (graph->edgeSum)--;
     return decoration;
 }
 
 void *removeNode(Graph *graph, Node *node) {
-    for (int i = 0; i < INIT_SIZE; i++) {
-        graph->adjacencyMatrix[i*graph->size + node->label] = 0; 
-        graph->adjacencyMatrix[node->label*graph->size + i] = 0; 
+    for (size_t i = 0; i < INIT_SIZE; i++) {
+        graph->adjacencyMatrix[i*( graph->size) + node->label] = 0; 
+        graph->adjacencyMatrix[node->label*(graph->size) + i] = 0; 
     }
 
     graph->nodeArray[node->label] = 0;
@@ -77,6 +76,11 @@ void *removeNode(Graph *graph, Node *node) {
 }
 
 Graph *initializeRandGraph(int directed, int simple, int n, int m) {
+    size_t maxPossible = (size_t) (directed*(n*n - simple*n)) + !directed*chooseTwo(n);
+    if ((size_t) m > maxPossible) {
+        fprintf(stderr, "Too many edges for graph of this size.\n");
+        return 0;
+    }
     Graph *graph = initializeGraph(directed, simple);
 
     for (int i = 0; i < n; i++) {
@@ -85,14 +89,20 @@ Graph *initializeRandGraph(int directed, int simple, int n, int m) {
 
     Node *node1;
     Node *node2;
+    
+    //make edge list
+    List *list = generatePossibleEdgesList(graph);
 
-    // this will be very inefficient when m is close to n^2 
-    while (graph->edgeSum < m) {
-        node1 = graph->nodeArray[rand() / (RAND_MAX / n + 1)];
-        node2 = graph->nodeArray[rand() / (RAND_MAX / n + 1)];
+    Index index;
+    for (int k = 0; k < m; k++) {
+        //choose random edge 
+        index = popRandomEdge(list);
+        node1 = graph->nodeArray[index.i];
+        node2 = graph->nodeArray[index.j];
         addEdge(graph, node1, node2, 0);
     }
 
+    destroyList(list);
     return graph;
 }
 
@@ -112,14 +122,14 @@ Graph *resizeGraph(Graph *graph) {
     newGraph->totalSize = newSize;
     newGraph->size = (graph->size)*2;
 
-    for (int i = 0; i < graph->order; i++) {
+    for (int i = 0; i < ((int) graph->order); i++) {
         newGraph->nodeArray[i] = graph->nodeArray[i];
     }
 
     newGraph->adjacencyMatrix = (void **) (&(newGraph->nodeArray[0]) + newGraph->size);
-    for (int i = 0; i < graph->order; i++) {
-        for (int j = 0; j < graph->order; j++) {
-            newGraph->adjacencyMatrix[i*newGraph->size + j] = graph->adjacencyMatrix[i*graph->size + j];
+    for (int i = 0; i < ((int) graph->order); i++) {
+        for (int j = 0; j < ((int) graph->order); j++) {
+            newGraph->adjacencyMatrix[((size_t) i)*(newGraph->size) + ((size_t) j)] = graph->adjacencyMatrix[((size_t) i)*(graph->size) + ((size_t) j)];
         }
     }
 
