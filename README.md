@@ -10,10 +10,12 @@ RULES:
 - code as modularly as possible: if we have to update a data structure or algorithm for space/time reqs, we don't want to break everything
 - you can use any IDE you want, but it is our official position that using VIM to look cool is the opposite of cool
 - 
-- while (opening bracket on a new line)
-- {
--     pleasePutYourBracketsOnCorrectly();      
-- }
+```
+while (opening bracket on a new line)
+{
+    pleasePutYourBracketsOnCorrectly();      
+}
+```
 - 
 - (I might make a style guide eventually)
 
