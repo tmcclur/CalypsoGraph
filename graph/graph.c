@@ -93,7 +93,7 @@ Graph *initializeRandGraph(int directed, int simple, int n, int m) {
     Node *node2;
 
     //improved naive version
-    if ((double)m > ((double)n*n * 0.57)){
+    if ((double)m > ((double)n*n * 0.5775)){
         while(graph->edgeSum < (size_t) (n*n - m)) {
             //choose random edge 
             node1 = graph->nodeArray[rand() % n];
