@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if ! [ -x `which clang-format` ]; then
+if ! [ -x "`which clang-format`" ]; then
     exit
 fi
 

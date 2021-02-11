@@ -31,6 +31,10 @@ int parse(char *buffer, char *tokens[BUFS / 2], char *argv[BUFS / 2]) {
         argv[0] = strrchr(argv[0], '/') + 1;
     }
 
+    if (!argv[0]) {
+        return -1;
+    }
+
     return 0;
 }
 
@@ -54,15 +58,14 @@ int main() {
     char *buffer;
     char *tokens[BUFS / 2];
     char *argv[BUFS / 2];
-    // char *expandedLine;
 
     /* REPL */
     while (1) {
         /* this function reads into buffer */
         buffer = readline(PROMPT);
-        add_history(buffer);
+        if (buffer) break;
         /* parse and eval input */
-        if (parse(buffer, tokens, argv) || !argv[0]) {
+        if (parse(buffer, tokens, argv)) {
             puts("Invalid command.");
             continue;
         }
