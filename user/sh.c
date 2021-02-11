@@ -12,7 +12,7 @@
 #define PROMPT "Type Command> "
 
 int parse(char *buffer, char *tokens[BUFS / 2], char *argv[BUFS / 2]) {
-    if (strlen(buffer) < BUFS) return -1;
+    if (strlen(buffer) > BUFS) return -1;
 
     /* tokenize the buffer */
     char *buff = buffer;
