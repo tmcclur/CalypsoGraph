@@ -42,7 +42,7 @@ int parse(char *buffer, char *tokens[BUFS / 2], char *argv[BUFS / 2]) {
     This function checks for and calls builtin functions
 */
 int builtin(char *argv[BUFS / 2]) {
-    if (!(strcmp(argv[0], "n")) || !(strcmp(argv[0], "new"))) {
+    if (!(strcmp(argv[0], "new")) || !(strcmp(argv[0], "n"))) {
         return new (argv);
     } else if (!(strcmp(argv[0], "exit")) || !(strcmp(argv[0], "x"))) {
         return 0;
@@ -63,7 +63,7 @@ int main() {
     while (1) {
         /* this function reads into buffer */
         buffer = readline(PROMPT);
-        if (buffer) break;
+        if (buffer == NULL) break;
         /* parse and eval input */
         if (parse(buffer, tokens, argv)) {
             puts("Invalid command.");
