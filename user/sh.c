@@ -73,6 +73,9 @@ int main() {
         if ((b = builtin(argv)) < 0) {
             puts("Command not found. Use help to see list of commands.");
         }
+        if (!b) {
+            break;
+        }
         free(buffer);
     }
 
