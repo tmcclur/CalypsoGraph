@@ -1,31 +1,31 @@
-#define INIT_SIZE  256
+#define INIT_SIZE 256
 #include <stddef.h>
 
-//TODO: reimpliment everythign with linked lists instead of arrays
+// TODO: reimpliment everythign with linked lists instead of arrays
 
-// Graph Struct, adjacency matrix, node matrix, edge val type, directed 
+// Graph Struct, adjacency matrix, node matrix, edge val type, directed
 typedef struct GraphNode {
     size_t label;
     void *val;
 } Node;
 
 typedef struct Graphs {
-   int directed;
-   size_t order;
-   size_t edgeSum;
-   int simple;
-   size_t size;
-   size_t totalSize;
-   double *adjacencyMatrix;
-   Node *nodeArray[INIT_SIZE];
-   double adjMat[INIT_SIZE*INIT_SIZE];
+    int directed;
+    size_t order;
+    size_t edgeSum;
+    int simple;
+    size_t size;
+    size_t totalSize;
+    double *adjacencyMatrix;
+    Node *nodeArray[INIT_SIZE];
+    double adjMat[INIT_SIZE * INIT_SIZE];
 } Graph;
 
 // initialize graph
 Graph *initializeGraph(int directed, int simple);
 
 // add node to graph
-Node *addNode(Graph **graph,  void *val);
+Node *addNode(Graph **graph, void *val);
 
 // add edge from node1 to node2
 int addEdge(Graph *graph, Node *node1, Node *node2, double decoration);
@@ -39,13 +39,11 @@ void *removeNode(Graph *graph, Node *node);
 // initialize random graph with n nodes and m edges
 Graph *initializeRandGraph(int directed, int simple, int n, int m);
 
-//consider search options: hash function by vals
+// consider search options: hash function by vals
 
-//destroy graph function
+// destroy graph function
 
 // resize the Graph
 Graph *resizeGraph(Graph *graph);
 
 size_t chooseTwo(int n);
-
-

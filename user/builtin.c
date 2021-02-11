@@ -1,10 +1,12 @@
+#include "builtin.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../graph/graph.h"
-#include "builtin.h"
 
-int new(char *argv[BUFS / 2]) {
+#include "../graph/graph.h"
+
+int new (char *argv[BUFS / 2]) {
     // args: 0-new, 1-name, 2-directed/rand 3+-specific args
     int directed, simple;
     Graph *graph = 0;
@@ -18,29 +20,35 @@ int new(char *argv[BUFS / 2]) {
         if (argv[2] != 0) {
             if (!(strcmp(argv[2], "d")) || !(strcmp(argv[2], "directed"))) {
                 if (argv[3] == 0) {
-                } else if (!(strcmp(argv[3], "s")) || !(strcmp(argv[3], "simple"))) {
+                } else if (!(strcmp(argv[3], "s")) ||
+                           !(strcmp(argv[3], "simple"))) {
                     simple = 1;
                 } else {
                     fprintf(stderr, "Parameters not valid for new command.\n");
                     return -1;
                 }
             } else if (!(strcmp(argv[2], "r")) || !(strcmp(argv[2], "rand"))) {
-                if ((argv[3] == 0) || (argv[4] == 0) || (argv[5] == 0)){
+                if ((argv[3] == 0) || (argv[4] == 0) || (argv[5] == 0)) {
                     fprintf(stderr, "Too few arguments for random graph.\n");
                     return -1;
                 } else {
                     if (argv[6] == 0) {
-                    } else if (!(strcmp(argv[6], "s")) || !(strcmp(argv[6], "simple"))) {
+                    } else if (!(strcmp(argv[6], "s")) ||
+                               !(strcmp(argv[6], "simple"))) {
                         simple = 1;
                     } else {
-                        fprintf(stderr, "Parameters not valid for new command.\n");
+                        fprintf(stderr,
+                                "Parameters not valid for new command.\n");
                         return -1;
                     }
 
-                    if (!(strcmp(argv[5], "d")) || !(strcmp(argv[5], "directed"))) {
+                    if (!(strcmp(argv[5], "d")) ||
+                        !(strcmp(argv[5], "directed"))) {
                         directed = 1;
-                    } else if (!(!(strcmp(argv[5], "u")) || !(strcmp(argv[5], "undirected")))) {
-                        fprintf(stderr, "Parameters not valid for new command.\n");
+                    } else if (!(!(strcmp(argv[5], "u")) ||
+                                 !(strcmp(argv[5], "undirected")))) {
+                        fprintf(stderr,
+                                "Parameters not valid for new command.\n");
                         return -1;
                     } else {
                         directed = 0;
@@ -49,10 +57,12 @@ int new(char *argv[BUFS / 2]) {
                     int m = atoi(argv[4]);
                     graph = initializeRandGraph(directed, simple, n, m);
                 }
-            } else if (!(strcmp(argv[2], "u")) || !(strcmp(argv[2], "undirected"))) {
+            } else if (!(strcmp(argv[2], "u")) ||
+                       !(strcmp(argv[2], "undirected"))) {
                 directed = 0;
                 if (argv[3] == 0) {
-                } else if (!(strcmp(argv[3], "s")) || !(strcmp(argv[3], "simple"))) {
+                } else if (!(strcmp(argv[3], "s")) ||
+                           !(strcmp(argv[3], "simple"))) {
                     simple = 1;
                 } else {
                     fprintf(stderr, "Parameters not valid for new command.\n");
@@ -62,17 +72,18 @@ int new(char *argv[BUFS / 2]) {
                 fprintf(stderr, "Parameters not valid for new command.\n");
                 return -1;
             }
-        }  
+        }
     }
     if (!graph) {
         graph = initializeGraph(directed, simple);
     }
-        // store graph by name in bst 
+    // store graph by name in bst
     return 1;
 }
 
 int help() {
-    printf("\
+    printf(
+        "\
 Command(abbrev.) -- args\n\
                     -- additional arg forms\n\
                     description of args \n\
