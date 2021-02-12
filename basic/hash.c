@@ -5,7 +5,11 @@
 #include <string.h>
 
 int hashString(char *s) {
-    int key = atoi(s);
+    int key = 0;
+    for (int i = 0; s[i] != 0; i++) {
+        key *= 10;
+        key += (int)s[i];
+    }
 
     /* Robert Jenkins' 32 bit Mix Function */
     key += (key << 12);
