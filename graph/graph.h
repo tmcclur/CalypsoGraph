@@ -42,6 +42,7 @@ Graph *initializeRandGraph(int directed, int simple, int n, int m);
 // consider search options: hash function by vals
 
 // destroy graph function
+void destroyGraph(Graph *graph);
 
 // resize the Graph
 Graph *resizeGraph(Graph *graph);

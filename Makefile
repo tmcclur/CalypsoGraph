@@ -4,7 +4,7 @@ CFLAGS += -Winline -Wfloat-equal -Wnested-externs -funroll-loops
 CFLAGS += -pedantic -std=gnu99 -Werror
 CFLAGS += -ledit
 EXECS = calypso
-DEPENDENCIES = user/sh.c graph/graph.c user/builtin.c basic/combinatorics.c
+DEPENDENCIES = user/sh.c graph/graph.c user/builtin.c basic/combinatorics.c basic/hash.c
 
 .PHONY: all clean perf run
 

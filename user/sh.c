@@ -7,6 +7,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "../basic/hash.h"
 #include "builtin.h"
 
 #define PROMPT "Type Command> "
@@ -50,6 +51,8 @@ int builtin(char *argv[BUFS / 2]) {
 
 int main() {
     srand((unsigned int)(time(NULL)));
+
+    initializeHashTable();
 
     char *buffer;
     char *tokens[BUFS / 2];

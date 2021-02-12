@@ -166,3 +166,10 @@ Graph *resizeGraph(Graph *graph) {
     free(graph);
     return newGraph;
 }
+
+void destroyGraph(Graph *graph) {
+    for (int i = 0; graph->nodeArray[i] != 0; i++) {
+        free(graph->nodeArray[i]);
+    }
+    free(graph);
+}

@@ -4,8 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../basic/hash.h"
 #include "../graph/graph.h"
 
+// TODO: refactor this mess
 int new (char *argv[BUFS / 2]) {
     // args: 0-new, 1-name, 2-directed/rand 3+-specific args
     int directed, simple;
@@ -16,7 +18,6 @@ int new (char *argv[BUFS / 2]) {
         fprintf(stderr, "Too few arguments for new command.\n");
         return -1;
     } else {
-        // check that name is not already taken
         if (argv[2] != 0) {
             if (!(strcmp(argv[2], "d")) || !(strcmp(argv[2], "directed"))) {
                 if (argv[3] == 0) {
@@ -74,8 +75,15 @@ int new (char *argv[BUFS / 2]) {
             }
         }
     }
+
     if (!graph) {
         graph = initializeGraph(directed, simple);
+    }
+    if (hashPut(argv[1], graph) < 0) {
+        fprintf(stderr, "Name already in use.");
+        // delete graph
+        destroyGraph(graph);
+        return -1;
     }
     // store graph by name in bst
     return 1;
