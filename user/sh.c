@@ -50,7 +50,7 @@ int builtin(char *argv[BUFS / 2]) {
     } else if (!(strcmp(argv[0], "help")) || !(strcmp(argv[0], "h"))) {
         return help();
     }
-    return -1;
+    return -2;
 }
 
 int main() {
@@ -69,11 +69,11 @@ int main() {
         if (buffer == NULL) break;
         /* parse and eval input */
         if (parse(buffer, tokens, argv)) {
-            puts("Invalid command.");
+            if (strlen(buffer) > BUFS) puts("Invalid command.");
             continue;
         }
         int b;
-        if ((b = builtin(argv)) < 0) {
+        if ((b = builtin(argv)) < -1) {
             puts("Command not found. Use help to see list of commands.");
         }
         if (!b) {
