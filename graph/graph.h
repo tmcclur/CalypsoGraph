@@ -1,5 +1,7 @@
-#define INIT_SIZE 256
 #include <stddef.h>
+
+#include "../basic/combinatorics.h"
+#define INIT_SIZE 256
 
 // TODO: reimpliment everythign with linked lists instead of arrays
 
@@ -47,4 +49,4 @@ void destroyGraph(Graph *graph);
 // resize the Graph
 Graph *resizeGraph(Graph *graph);
 
-size_t chooseTwo(int n);
+// size_t chooseTwo(int n);

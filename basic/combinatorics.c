@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
-#include "../graph/graph.h"
+#include "combinatorics.h"
 
 size_t chooseTwo(int n) {
     size_t sum = 0;
