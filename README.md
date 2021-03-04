@@ -16,18 +16,7 @@ while (opening bracket on a new line)
     pleasePutYourBracketsOnCorrectly();      
 }
 ```
-- 
 - (I might make a style guide eventually)
-
-### TODO:
-- [x] fill out makefile
-- [ ] implement first builtin functions in `sh.c`
-- [x] get a version up and running and make test resize and basic graph functionality
-- [ ] build a gameplan for builtin graph functions--> which algorithms, building blocks of graph math, look into category theory?
-- [ ] linear algebra
-- [ ] command history ^/ gdb style enter, can be output to a file
-- [ ] figure out how to visualize graphs and edit them visually: look into energy minimization
-- [ ] design scripting lang for graphs: transpiled into c?
 
 ### Linear stuff
 [lapack/bals stackoverflow](https://stackoverflow.com/questions/17858104/what-is-the-relation-between-blas-lapack-and-atlas)
